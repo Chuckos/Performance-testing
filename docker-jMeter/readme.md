@@ -1,4 +1,4 @@
-# Docker + JMeter (Distributed Load Testing)
+# JMeter + Docker + Docker Compose (Distributed Load Testing)
 
 # Overview
 
