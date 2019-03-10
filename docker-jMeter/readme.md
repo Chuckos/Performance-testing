@@ -4,13 +4,13 @@
 
 The following is JMeter distributed testing using Docker. 
 
-For detailed information on distrubuted load testing with JMeter see the official apache JMeter documentation:
+For detailed information on distributed load testing with JMeter see the official apache JMeter documentation:
 
 [JMeter Distributed Testing Step-By-Step](https://jmeter.apache.org/usermanual/jmeter_distributed_testing_step_by_step.html)
 
 [JMeter Remote Testing](https://jmeter.apache.org/usermanual/remote-test.html)
 
-## Build Images
+## Build Docker Images
 
 From root folder build the images with following command, run each command separately:
 
@@ -29,9 +29,9 @@ $ docker image ls
 
 ```
 
-## Run Containers:
+## Run Docker Containers:
 
-Start by running the jmeter servers.  Execute each of the command lines below seprately
+Start by running the jmeter servers.  Execute each of the command lines below separately
 
 ```
 $ sudo docker run -dit --name server01 jmeter-server /bin/bash
@@ -54,15 +54,8 @@ docker ps -a
 
 ```
 
-To get the IP addresses of the jmeter server containers which you will need later, run the following command (see below):
-
-```
-$ sudo docker inspect --format '{{ .Name }} => {{ .NetworkSettings.IPAddress }}' $(sudo docker ps -a -q)
-```
-
-Note: you will need the  iIP addresses of the jmeter servers to run jmeter in distrubuted mode later.
-
-## Copy JMeter Script to Master Container:
+<a name="copy-jmeter-script"></a>
+## Copy JMeter Script to Master Docker Container:
 
 Copy JMeter script to jmeter master container.
 
@@ -102,7 +95,20 @@ jmeter -n -t jmeter/apache-jmeter-3.3/bin/thng-purchase-order.jmx
 
 Hit `Ctrl + C` to stop test.
 
-## Run Servers with JMeter Tests:
+<a name="run-jmeter-servers"></a>
+## Run JMeter Docker Servers with JMeter Test:
+Note: you will need to get the IP addresses of the jmeter servers to run jmeter in distributed mode later.
+
+
+To get the IP addresses of the jmeter server containers which you will need later, run the following command (see below):
+
+```
+$ sudo docker inspect --format '{{ .Name }} => {{ .NetworkSettings.IPAddress }}' $(sudo docker ps -a -q)
+```
+
+
+
+
 
 SSH into the jmeter master container, then use the ip addresses of the jmeter-servers in the following command (see below). 
 
@@ -113,3 +119,79 @@ jmeter -n -t jmeter/apache-jmeter-3.3/bin/thng-purchase-order.jmx -R172.17.0.2,1
 ```
 
 You should messages such as `configuring remote engine: 172.17.0.2` and `Starting remote engine`.
+
+## Docker Compose:
+
+For an overview of what docker-compose is and how it is useful in this context, please see [here](https://docs.docker.com/compose/overview/)
+
+For instructions on how to install docker-compose please visit [here](https://docs.docker.com/compose/install/)
+
+**Pre-requisite:**
+
+1. Ensure images for JMeter master and servers have been built.
+2. Docker-compose has been installed.
+
+From the terminal navigate to `docker-compose-JMeter` folder.
+
+Ensure no JMeter master or server containers created or running, use the following command to check
+
+```
+$ docker ps -a 
+
+```
+
+If there are containers that have been created, stop them and remove them with the following commands:
+
+
+```
+## Stop container
+$ docker container stop <container ids>
+
+e.g
+$ docker container stop cc3f2ff51cab cd20b396a061
+
+## Remove / delete containers
+$ docker container rm cc3f2ff51cab cd20b396a061
+
+```
+
+To Start JMeter Master (Client) and a JMeter Server, type the following command:
+
+```
+$ sudo docker-compose up -d
+```
+
+Now you have successfully spun up a docker container for the JMeter Master (client) and 1 JMeter Server.
+
+To add additional Docker JMeter Servers, Just do the following command
+
+```
+$ sudo docker-compose scale server=<X number of servers you want>
+
+e.g
+
+## The following will create an additional 5 docker container servers.
+$ sudo docker-compose scale server=5
+
+```
+
+To view the created JMeter Servers and JMeter Master Container created via docker-compose, use the following command:
+
+``` 
+$ sudo docker-compose ps 
+```
+
+To Run tests:
+
+Go through the following Sections: 
+ 
+1. [Copy JMeter Script to Master Docker Container](#copy-jmeter-script)
+2. [Run JMeter Docker Servers with JMeter Test](#run-jmeter-servers)
+
+
+Once testing is complete to stop/remove (tear down) the containers, execute the following command:
+
+```
+$ sudo docker-compose down
+
+``` 

@@ -1,0 +1,18 @@
+version: '3'
+services:
+  master:
+    image: jmeter-master
+    container_name: master
+    tty: true
+    hostname: master
+    networks:
+      - jmeterv3
+  server:
+    image: jmeter-server
+    tty: true
+    networks:
+      - jmeterv3
+
+networks:
+  jmeterv3:
+    driver: bridge
