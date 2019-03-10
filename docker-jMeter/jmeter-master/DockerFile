@@ -1,0 +1,6 @@
+# Use jmeter-master base image
+FROM jmeter-base
+LABEL maintainer="charles@evrythng.com"
+
+# Ports to be exposed from the container for JMeter Master
+EXPOSE 60000
