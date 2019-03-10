@@ -10,6 +10,7 @@ For detailed information on distributed load testing with JMeter see the officia
 
 [JMeter Remote Testing](https://jmeter.apache.org/usermanual/remote-test.html)
 
+<a name="build-docker-images"></a>
 ## Build Docker Images
 
 From root folder build the images with following command, run each command separately:
@@ -106,7 +107,11 @@ To get the IP addresses of the jmeter server containers which you will need late
 $ sudo docker inspect --format '{{ .Name }} => {{ .NetworkSettings.IPAddress }}' $(sudo docker ps -a -q)
 ```
 
+To get the IP addresses of the jmeter servers created via docker-compose use the following command instead
 
+```
+sudo docker inspect -f '{{.Name}} - {{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' $(sudo docker ps -aq)
+```
 
 
 
@@ -128,12 +133,12 @@ For instructions on how to install docker-compose please visit [here](https://do
 
 **Pre-requisite:**
 
-1. Ensure images for JMeter master and servers have been built.
+1. Ensure images for JMeter master and servers have been built. [see here](#build-docker-images)
 2. Docker-compose has been installed.
 
 From the terminal navigate to `docker-compose-JMeter` folder.
 
-Ensure no JMeter master or server containers created or running, use the following command to check
+Ensure no JMeter master or server containers have been created or running, use the following command to check:
 
 ```
 $ docker ps -a 
@@ -188,6 +193,12 @@ Go through the following Sections:
 1. [Copy JMeter Script to Master Docker Container](#copy-jmeter-script)
 2. [Run JMeter Docker Servers with JMeter Test](#run-jmeter-servers)
 
+<a name="ip-address-docker-compose"></a>
+**Important Note:** To get the IP addresses of the JMeter Servers built via docker compose you need to run the following command:
+
+```
+$ sudo docker inspect -f '{{.Name}} - {{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' $(sudo docker ps -aq)
+```
 
 Once testing is complete to stop/remove (tear down) the containers, execute the following command:
 
