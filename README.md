@@ -6,3 +6,4 @@ Portfolio of projects and scripts that I have created to demonstrate performance
 
 * [JMeter-URL-Iterator](https://github.com/Chuckos/Performance-testing/tree/master/Jmeter-url-iterator)
 * [Dockerised-JMeter-Distributed-Testing](https://github.com/Chuckos/Performance-testing/tree/master/docker-jMeter)
+* [K6 - Performance Testing Examples](https://github.com/Chuckos/Performance-testing/tree/master/K6-Examples)
